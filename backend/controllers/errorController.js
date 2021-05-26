@@ -6,7 +6,12 @@ const validatorErrorHandler = err => {
   return new ErrorResponse(message, 400);
 };
 
+const mongoDuplicateKey = err => {
+  const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
 
+  const message = `Duplicate filed value: ${value}`
+  return new ErrorResponse(message, 400)
+}
 
 const devErrors = (err, res) => {
   res.status(err.statusCode).json({
@@ -43,10 +48,13 @@ const errorHandler = (err, req, res, next) => {
     let error = { ...err };
 
     // validatorError - duplication
-    if (error.name === 'ValidationError') {
+    if(error.name === 'ValidationError') {
       error = validatorErrorHandler(error);
     }
 
+    if(error.code === 11000) {
+      error = mongoDuplicateKey(error)
+    }
 
     proErrors(error, res);
   }
