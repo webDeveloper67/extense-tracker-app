@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node backend/server",
     "server": "nodemon backend/server",
+    "start:prod": "NODE_ENV=production nodemon backend/server.js",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
@@ -23,7 +24,7 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "mongoose": "^5.12.10"
+    "mongoose": "^5.5.2"
   },
   "devDependencies": {
     "concurrently": "^6.1.0",
