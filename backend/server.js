@@ -12,6 +12,7 @@ dotenv.config()
 connectDB()
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
 
 // Mounting Routes
 app.use('/api/expenses', expenseRoutes)

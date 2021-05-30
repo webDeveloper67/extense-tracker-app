@@ -8,7 +8,7 @@ const Home = () => {
       <Container className='text-light'>
         <h1>Welcome To Our App</h1>
         <p>
-          This is a simple Expense Tracker App, If you alreay signed up, go and see the features of this app. Otherwise You can simply sign up by using the links below.
+          This is a simple Expense Tracker App, If you alreay signed up, go and see the features of this app. Otherwise You can simply sign up by using the buttons below.
         </p>
         <p>
         <LinkContainer to='/signup'>

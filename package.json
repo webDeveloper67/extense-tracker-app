@@ -2,14 +2,15 @@
   "name": "expense-tracker-app",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node backend/server",
     "server": "nodemon backend/server",
-    "start:prod": "NODE_ENV=production nodemon backend/server.js",
+    "start:prod": "NODE_ENV=production nodemon backend/server",
     "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run client\" \"npm run server\""
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "concurrently": "^6.1.0",
+    "http-proxy-middleware": "^2.0.0",
     "nodemon": "^2.0.7"
   }
 }
