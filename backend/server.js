@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import connectDB from './config/db.js'
 import expenseRoutes from './routes/expenseRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 import errorHandler from './controllers/errorController.js'
 import ErrorResponse from './utils/ErrorResponse.js'
 
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }))
 
 // Mounting Routes
 app.use('/api/expenses', expenseRoutes)
+app.use('/api/users', userRoutes)
 
 app.all('*', async (req, res, next) => {
   next(new ErrorResponse(`Can not find ${req.originalUrl} on the server!`, 404));
