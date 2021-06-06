@@ -8,8 +8,9 @@ const validatorErrorHandler = err => {
 
 const mongoDuplicateKey = err => {
   const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+  console.log(value);
 
-  const message = `Duplicate filed value: ${value}`
+  const message = `Duplicate field value: ${value}`;
   return new ErrorResponse(message, 400)
 }
 

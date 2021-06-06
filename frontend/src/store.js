@@ -3,11 +3,13 @@ import thunkMiddleware from 'redux-thunk'
 import {composeWithDevTools} from 'redux-devtools-extension'
 import {expenseReducer} from './reducers/expenseReducer'
 import {alertReducer} from './reducers/alertReducer'
+import {userRegisterReducer} from './reducers/userReducer'
 
 
 const reducer = combineReducers({
   expenses: expenseReducer,
-  alerts: alertReducer
+  alerts: alertReducer,
+  userRegister: userRegisterReducer
 })
 
 const initialState = {}

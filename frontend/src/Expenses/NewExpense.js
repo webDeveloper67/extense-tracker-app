@@ -1,11 +1,11 @@
 import React, {useState} from 'react'
-import {Form, Button, Container} from 'react-bootstrap'
+import {Form, Button, Container, Row, Col} from 'react-bootstrap'
 import Datetime from 'react-datetime'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faShoppingCart} from '@fortawesome/free-solid-svg-icons'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import {createExpense} from './../actions/expenseActions'
-import {setAlert} from './../actions/alertActions'
+import { Redirect } from 'react-router-dom'
 
 const NewExpense = () => {
 
@@ -21,8 +21,6 @@ const NewExpense = () => {
 
   const dispatch = useDispatch()
 
-  const expense = useSelector(state => state.expenses)
-
   const handleOnChange = name => e => {
     console.log(name, 'name in handleOnChange 💟');
     setExpenseValues({...expenseValues, [name]: e.target.value})
@@ -37,25 +35,28 @@ const NewExpense = () => {
     e.preventDefault()
 
     const expense = {
-      title: title,
-      category: category,
-      amount: amount,
-      incurred_on: incurred_on,
-      notes: notes,
-    }
-    
-    if(expense.error) {
-      console.log(expense.error, 'expense.error')
-      Object.values(expense.error, 'keys')
-      dispatch(setAlert('sth', 'danger'))
+      title: title || undefined,
+      category: category || undefined,
+      amount: amount || undefined,
+      incurred_on: incurred_on || undefined,
+      notes: notes || undefined,
     }
     dispatch(createExpense(expense))
+    setExpenseValues({...expenseValues, redirect: true})
+  }
+
+  if(expenseValues.redirect) {
+    return <Redirect to={'/'} />
   }
 
   return (
-    <Form className='p-5' onSubmit={handleSubmit}>
-      <Container fluid>
-      <FontAwesomeIcon icon={faShoppingCart} size="lg" color="purple" /><h3 className='d-inline-block m-3'>Expense Record</h3>
+    <Container fluid className='p-5'>
+      <Row className="justify-content-center">
+        <Col xs lg="8" className='text-center'>
+          <FontAwesomeIcon icon={faShoppingCart} size="lg" color="purple" /><h3>Expense Record</h3>
+        </Col>
+      </Row>
+      <Form className='p-5' onSubmit={handleSubmit}>
 
         <Form.Group className="mb-3">
           <Form.Label>Title</Form.Label>
@@ -86,8 +87,8 @@ const NewExpense = () => {
         <Button variant="primary" type="submit">
           Submit
         </Button>
-      </Container>
-    </Form>
+      </Form>
+    </Container>
   )
 }
 

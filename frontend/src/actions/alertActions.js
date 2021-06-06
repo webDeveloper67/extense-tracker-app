@@ -14,6 +14,6 @@ export const setAlert = (msg, type) => dispatch => {
       type: REMOVE_ALERT,
       payload: id
     }),
-    5000
+    3000
   )
 }
