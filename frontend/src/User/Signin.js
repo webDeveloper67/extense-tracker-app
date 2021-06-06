@@ -3,22 +3,21 @@ import {Redirect} from 'react-router-dom'
 import {Form, Container, Row, Col, Button} from 'react-bootstrap'
 import {useDispatch, useSelector} from 'react-redux'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faUserPlus} from '@fortawesome/free-solid-svg-icons'
-import {registerUser} from './../actions/userActions'
+import {faSignInAlt} from '@fortawesome/free-solid-svg-icons'
+import {loginUser} from './../actions/userActions'
 
-const Signup = () => {
+const Signin = () => {
 
   const [formData, setFormData] = useState({
-    name: '',
-    password: '',
     email: '',
+    password: '',
   })
 
   const dispatch = useDispatch()
 
-  const userInfo = useSelector(state => state.userRegister)
+  const userInfo = useSelector(state => state.userLogin)
   
-  const {name, password, email} = formData
+  const {password, email} = formData
 
   const handleOnChange = name => e => {
     setFormData({...formData, [name]: e.target.value})
@@ -28,12 +27,11 @@ const Signup = () => {
     e.preventDefault()
 
     const user = {
-      name: name || undefined,
       email: email || undefined,
       password: password || undefined,
     }
 
-    dispatch(registerUser(user))
+    dispatch(loginUser(user))
   }
 
 
@@ -46,14 +44,10 @@ const Signup = () => {
     <Container fluid className='p-5'>
       <Row className="justify-content-center">
         <Col xs lg="8" className='text-center'>
-          <FontAwesomeIcon icon={faUserPlus} size="lg" color="purple" /><h3>Sign Up</h3>
+          <FontAwesomeIcon icon={faSignInAlt} size="lg" color="purple" /><h3>Sign In</h3>
         </Col>
       </Row>
       <Form className='p-5' onSubmit={handleSubmit}>
-        <Form.Group className='mb-3'>
-          <Form.Label>Enter name</Form.Label>
-          <Form.Control placeholder="Name" value={name} onChange={handleOnChange('name')} />
-        </Form.Group>
 
         <Form.Group className='mb-3'>
           <Form.Label>Email address</Form.Label>
@@ -74,4 +68,4 @@ const Signup = () => {
 }
 
 
-export default Signup
+export default Signin

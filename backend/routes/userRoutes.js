@@ -1,10 +1,10 @@
 import express from 'express'
-import {registerUser} from './../controllers/userController.js'
+import {registerUser, loginUser, listUsers} from './../controllers/userController.js'
 
 const router = express.Router()
 
-router.route('/').post(registerUser)
-
+router.route('/').get(listUsers).post(registerUser)
+router.route('/login').post(loginUser)
 
 
 

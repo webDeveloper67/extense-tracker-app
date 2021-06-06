@@ -14,7 +14,9 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    minlength: 6,
+    select: false
   },
   updated: Date,
   created: {
@@ -33,11 +35,9 @@ UserSchema.pre('save', async function(next) {
   this.password = await bcrypt.hash(this.password, salt)
 })
 
-// Generate Token
-UserSchema.methods.getSignedJwtToken = function() {
-  return jwt.sign({id: this._id}, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE
-  })
+// Compare passwords
+UserSchema.methods.matchPassword = async function(enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password)
 }
 
 export default mongoose.model('User', UserSchema)
