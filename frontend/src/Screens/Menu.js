@@ -1,14 +1,28 @@
 import React, {useState} from 'react'
 import {LinkContainer} from 'react-router-bootstrap'
 import {Navbar, Nav, Container} from 'react-bootstrap'
+import {useDispatch, useSelector} from 'react-redux'
+import {logout} from './../actions/userActions'
 
 const Menu = () => {
   const [expanded, setExpanded] = useState(false)
 
-
+  const userLogin = useSelector(state => state.userLogin)
+  const {userInfo} = userLogin 
  
+  const dispatch = useDispatch()
+
+  // Passing two functions to onClick
+  const closeSignoutMenu = () => {
+    setTimeout(() => {setExpanded(false)}, 150)
+  }
+  const logoutHandler = () => {
+    dispatch(logout());
+  };
+
+
   return (
-    <Navbar bg="light" expand="lg" expanded={expanded}>
+    <Navbar bg="light" expand="md" expanded={expanded}>
       <Container>
         <LinkContainer to='/'>
           <Navbar.Brand className='text-decoration-underline'>ExpenseTracker</Navbar.Brand>
@@ -19,25 +33,32 @@ const Menu = () => {
             <LinkContainer to='/' onClick={() => setTimeout(() => {setExpanded(false)}, 150)}>
               <Nav.Link className='fw-bolder'>Home</Nav.Link>
             </LinkContainer>
-            {/* If user is Authed */}
-            <LinkContainer to='/expenses/all' onClick={() => setTimeout(() => {setExpanded(false)}, 150)}>
-              <Nav.Link>Expenses</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to='/expenses/reports' onClick={() => setTimeout(() => {setExpanded(false)}, 150)}>
-              <Nav.Link>Reports</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to='/expenses/new' onClick={() => setTimeout(() => {setExpanded(false)}, 150)}>
-              <Nav.Link>Add Expense</Nav.Link>
-            </LinkContainer>
-            {/* Link to user profile */}
-            {/* Sign OUt button */}
-            {/* If user is NOT Authed */}
-            <LinkContainer to='/signup' onClick={() => setTimeout(() => {setExpanded(false)}, 150)}>
+            {userInfo && userInfo ? <>
+              <LinkContainer to='/expenses/all' onClick={() => setTimeout(() => {setExpanded(false)}, 150)}>
+                <Nav.Link>Expenses</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to='/expenses/reports' onClick={() => setTimeout(() => {setExpanded(false)}, 150)}>
+                <Nav.Link>Reports</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to='/expenses/new' onClick={() => setTimeout(() => {setExpanded(false)}, 150)}>
+                <Nav.Link>Add Expense</Nav.Link>
+              </LinkContainer>
+              {/* User Profile */}
+              <LinkContainer to={`/user/${userInfo._id}`} onClick={() => setTimeout(() => {setExpanded(false)}, 150)}>
+                <Nav.Link>My Profile</Nav.Link>
+              </LinkContainer>
+              {/* Sign Out */}
+              <Nav.Link onClick={() => {closeSignoutMenu(); logoutHandler()}}>Sign Out</Nav.Link>
+            </> : 
+            <>
+              <LinkContainer to='/signup' onClick={() => setTimeout(() => {setExpanded(false)}, 150)}>
               <Nav.Link>SignUp</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to='/signin' onClick={() => setTimeout(() => {setExpanded(false)}, 150)}>
-              <Nav.Link>SignIn</Nav.Link>
-            </LinkContainer>
+              </LinkContainer>
+              <LinkContainer to='/signin' onClick={() => setTimeout(() => {setExpanded(false)}, 150)}>
+                <Nav.Link>SignIn</Nav.Link>
+              </LinkContainer>
+            </>
+            }
           </Nav>
         </Navbar.Collapse>
       </Container>

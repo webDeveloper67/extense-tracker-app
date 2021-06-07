@@ -1,4 +1,4 @@
-import {REGISTER_USER_REQUEST, REGISTER_USER_SUCCESS, REGISTER_USER_FAIL, LOGIN_USER_FAIL, LOGIN_USER_SUCCESS, LOGIN_USER_REQUEST} from './../constants'
+import {REGISTER_USER_REQUEST, REGISTER_USER_SUCCESS, REGISTER_USER_FAIL, LOGIN_USER_FAIL, LOGIN_USER_SUCCESS, LOGIN_USER_REQUEST, LOGOUT_USER} from './../constants'
 import axios from 'axios'
 import {setAlert} from './alertActions'
 
@@ -69,5 +69,14 @@ export const loginUser = user => async dispatch => {
       payload: message
     })
   }
+}
+
+// Logout
+export const logout = () => async dispatch => {
+  localStorage.removeItem('userInfo')
+
+  dispatch({
+    type: LOGOUT_USER
+  })
 }
 
