@@ -6,6 +6,8 @@ import AlertComp from './Screens/AlertComp'
 import NewExpense from './Expenses/NewExpense'
 import Signup from './User/Signup'
 import Signin from './User/Signin'
+import Reports from './Report/Reports'
+import PrivateRoute from './utils/PrivateRoute'
 
 const MainRouter = () => {
   return (
@@ -16,7 +18,8 @@ const MainRouter = () => {
         <Route path='/' exact component={Home} />
         <Route path='/signup' component={Signup} />
         <Route path='/signin' component={Signin} />
-        <Route path='/expenses/new' component={NewExpense} />
+        <PrivateRoute path='/expenses/new' component={NewExpense} />
+        <PrivateRoute path='/expenses/reports' component={Reports} />
       </Switch>
     </div>
   )

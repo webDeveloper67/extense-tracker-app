@@ -1,5 +1,6 @@
 import Expense from './../models/ExpenseModel.js'
 import ErrorResponse from '../utils/ErrorResponse.js'
+import mongoose from 'mongoose'
 
 
 const createExpense = async (req, res, next) => {
@@ -30,6 +31,29 @@ const expenseByUser = async (req, res, next) => {
   }
 }
 
+// Average Categories
+const averageCategories = async (req, res, next) => {
+  const firstDay = new Date(req.query.firstDay)
+  const lastDay = new Date(req.query.lastDay)
+
+  try {
+    let categoryMonthAvg = await Expense.aggregate([
+
+      {$match: {incurred_on: {$gte: firstDay, $lte: lastDay}, recorded_by: mongoose.Types.ObjectId(req.user._id)}},
+
+      {$group: {_id: {category: '$category'}, totalSpent: {$sum: '$amount'}}},
+
+      {$group: {_id: '$_id.category', avgSpent: {$avg: '$totalSpent'}}},
+
+      {$project: {x: '$_id', y: '$avgspent'}}
+    ]).exec()
+
+    res.json({monthAVG: categoryMonthAvg})
+  } catch (error) {
+    next(error)
+  }
+}
+
 // Remove an expense
 const removeExpense = async (req, res, next) => {
   try {
@@ -47,7 +71,6 @@ const removeExpense = async (req, res, next) => {
 
 // Middleware to check if req.user._id is equal to whom creates an expense
 const hasAuth = async (req, res, next) => {
-  console.log(req.user, 'req.user in auth middleware');
   try {
     let expense = await Expense.findById(req.params.expenseId)
     console.log(expense);
@@ -57,7 +80,7 @@ const hasAuth = async (req, res, next) => {
     }
   
     let isAuthed = expense.recorded_by.equals(req.user._id)
-    console.log(isAuthed, '😍');
+    
     if(!isAuthed) {
       return next(new ErrorResponse('You are not authorized', 403))
     }
@@ -73,4 +96,4 @@ const hasAuth = async (req, res, next) => {
 
 
 
-export {createExpense, expenseByUser, removeExpense, hasAuth}
+export {createExpense, expenseByUser,averageCategories, removeExpense, hasAuth}

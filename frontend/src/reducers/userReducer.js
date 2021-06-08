@@ -16,11 +16,11 @@ export const userRegisterReducer = (state = {}, action) => {
 export const userLoginReducer = (state = {}, action) => {
   switch (action.type) {
     case LOGIN_USER_REQUEST:
-      return {loading: true};
+      return {loading: true, isAuthed: true};
     case LOGIN_USER_SUCCESS:
-      return {loading: false, userInfo: action.payload, error: null};
+      return {loading: false, userInfo: action.payload, isAuthed: true, error: null};
     case LOGIN_USER_FAIL:
-      return {loading: false, error: action.payload};
+      return {loading: false, isAuthed: true, error: action.payload};
     case LOGOUT_USER:
       return {}
     default:
