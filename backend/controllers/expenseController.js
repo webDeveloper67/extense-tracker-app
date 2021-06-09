@@ -1,6 +1,7 @@
 import Expense from './../models/ExpenseModel.js'
 import ErrorResponse from '../utils/ErrorResponse.js'
 import mongoose from 'mongoose'
+import extend from 'lodash/extend.js'
 
 
 const createExpense = async (req, res, next) => {
@@ -37,18 +38,36 @@ const averageCategories = async (req, res, next) => {
   const lastDay = new Date(req.query.lastDay)
 
   try {
-    let categoryMonthAvg = await Expense.aggregate([
-
-      {$match: {incurred_on: {$gte: firstDay, $lte: lastDay}, recorded_by: mongoose.Types.ObjectId(req.user._id)}},
-
-      {$group: {_id: {category: '$category'}, totalSpent: {$sum: '$amount'}}},
-
-      {$group: {_id: '$_id.category', avgSpent: {$avg: '$totalSpent'}}},
-
-      {$project: {x: '$_id', y: '$avgspent'}}
+    let categoryMonthlyAvg = await Expense.aggregate([
+      { $match : { incurred_on : { $gte : firstDay, $lte: lastDay }, recorded_by: mongoose.Types.ObjectId(req.user._id)}},
+      { $group : { _id : {category: "$category"}, totalSpent:  {$sum: "$amount"} } },
+      { $group: { _id: "$_id.category", avgSpent: { $avg: "$totalSpent"}}},
+      { $project: {x: '$_id', y: '$avgSpent'}}
     ]).exec()
 
-    res.json({monthAVG: categoryMonthAvg})
+    // _id: what we want to group by
+    res.json({monthAVG:categoryMonthlyAvg})
+  } catch (error){
+    next(error)
+  }
+}
+
+// Update an expense
+const updateExpense = async (req, res, next) => {
+  try {
+    let expense = await Expense.findById(req.params.expenseId)
+
+    if(!expense) {
+      return next(new ErrorResponse('No expense found with this specific ID', 404))
+    }
+
+    expense = extend(expense, req.body)
+
+    expense.updated = Date.now()
+
+    await expense.save()
+
+    res.json(expense)
   } catch (error) {
     next(error)
   }
@@ -96,4 +115,4 @@ const hasAuth = async (req, res, next) => {
 
 
 
-export {createExpense, expenseByUser,averageCategories, removeExpense, hasAuth}
+export {createExpense, expenseByUser,averageCategories, updateExpense, removeExpense, hasAuth}
